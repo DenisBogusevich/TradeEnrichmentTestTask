@@ -44,7 +44,7 @@ class CsvFileService() : FileService {
                     null
                 }
             } else {
-                logger.warn("Invalid line format at line $lineCount: expected 2 parts, got ${parts.size}")
+                logger.debug("Invalid line format at line $lineCount: expected 2 parts, got ${parts.size}")
                 null
             }
         }.toList().also {
@@ -60,7 +60,7 @@ class CsvFileService() : FileService {
      * @return List of trade records
      */
     override fun processTradeFile(buffer: String): List<TradeRecord> {
-        logger.info("Starting to process trade CSV file")
+        logger.debug("Starting to process trade CSV file")
         var lineCount = 0
         var successCount = 0
 
@@ -81,11 +81,11 @@ class CsvFileService() : FileService {
                     null
                 }
             } else {
-                logger.warn("Invalid trade line format at line $lineCount: expected 4 parts, got ${parts.size}")
+                logger.debug("Invalid trade line format at line $lineCount: expected 4 parts, got ${parts.size}")
                 null
             }
         }.toList().also {
-            logger.info("Trade CSV processing completed. Processed $lineCount lines, successfully parsed $successCount trades")
+            logger.debug("Trade CSV processing completed. Processed $lineCount lines, successfully parsed $successCount trades")
         }
     }
 }

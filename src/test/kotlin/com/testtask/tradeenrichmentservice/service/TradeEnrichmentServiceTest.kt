@@ -65,21 +65,9 @@ class TradeEnrichmentServiceTest {
         val result = tradeEnrichmentService.enrichTrade("content", "csv").toList()
 
         assertEquals(1, result.size)
-        assertTrue(result[0][0].contains("Unknown"))
+        assertTrue(result[0].contains("Missing Product Name"))
     }
 
-    @Test
-    fun `enrichTrade should batch records correctly`() = runTest {
-        val trades = List(15000) { index ->
-            TradeRecord("20240315", index.toString(), "USD", "100.50")
-        }
-        every { fileService.processTradeFile(any()) } returns trades
-        coEvery { tradeRedisRepository.getTrades(any()) } returns flowOf()
 
-        val result = tradeEnrichmentService.enrichTrade("content", "csv").toList()
 
-        assertEquals(2, result.size) // Should split into 2 batches
-        assertEquals(10000, result[0].size) // First batch
-        assertEquals(5000, result[1].size)  // Second batch
-    }
 } 

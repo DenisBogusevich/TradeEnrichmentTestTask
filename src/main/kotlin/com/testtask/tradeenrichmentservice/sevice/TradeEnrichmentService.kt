@@ -3,11 +3,8 @@
 import com.testtask.tradeenrichmentservice.model.TradeRecord
 import com.testtask.tradeenrichmentservice.repository.TradeRedisRepository
 import com.testtask.tradeenrichmentservice.sevice.FileServices.FileServiceFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.stereotype.Service
@@ -76,34 +73,50 @@ class TradeEnrichmentService(
      * @param extension File extension determining the data format
      * @return Flow<List<String>> Stream of enriched data split into batches
      */
-    fun enrichTrade(buffer: String, extension: String): Flow<List<String>> = channelFlow {
+    fun enrichTrade(buffer: String, extension: String): Flow<String> = flow {
         logger.info("Starting trade enrichment for file with extension: $extension")
         try {
             val fileService = fileServiceFactory.getFileService(extension)
-            val parsedRecords = fileService.processTradeFile(buffer)
+            
+            // Разделяем входной буфер на чанки
+            val chunks = buffer.lineSequence()
+                .chunked(5000)
+                .map { it.joinToString("\n") }
+                .toList()
+
+            // Параллельно обрабатываем чанки
+            val parsedRecords = withContext(Dispatchers.IO) {
+                chunks.map { chunk ->
+                    async {
+                        fileService.processTradeFile(chunk)
+                    }
+                }.awaitAll().flatten()
+            }
+            
             logger.info("Parsed ${parsedRecords.size} trade records")
 
-            val uniqueProductIds = parsedRecords.map { it.productIdOrName }.toSet().toList()
-            logger.debug("Found ${uniqueProductIds.size} unique product IDs")
-
-            val productNamesMap = tradeRedisRepository.getTrades(uniqueProductIds)
+            val uniqueProductIds = parsedRecords.asSequence()
+                .map { it.productIdOrName }
+                .distinct()
                 .toList()
-                .toMap()
-            logger.debug("Retrieved ${productNamesMap.size} product names from Redis")
+                
+            val productNamesMap = withContext(Dispatchers.IO) {
+                tradeRedisRepository.getTrades(uniqueProductIds)
+                    .toList()
+                    .associate { it.first to it.second }
+            }
 
-            parsedRecords.map {
-                val productName = productNamesMap[it.productIdOrName]
-                if (productName == null) {
-                    logger.warn("Product not found for ID: ${it.productIdOrName}")
-                }
-                it.copy(productIdOrName = productName ?: "Unknown").toString()
-            }.chunked(10000)
-                .forEach { batch ->
-                    logger.debug("Processing batch of ${batch.size} records")
-                    launch(Dispatchers.IO) {
-                        send(batch)
+            // Обрабатываем результаты
+            parsedRecords.asSequence()
+                .chunked(1000)
+                .forEach { chunk ->
+                    val enrichedChunk = chunk.joinToString("") { record ->
+                        val productName = productNamesMap[record.productIdOrName] ?: "Missing Product Name"
+                        "${record.dateStr}, $productName, ${record.currency}, ${record.price}\n"
                     }
+                    emit(enrichedChunk)
                 }
+
             logger.info("Trade enrichment completed successfully")
         } catch (e: Exception) {
             logger.error("Error during trade enrichment: ${e.message}", e)

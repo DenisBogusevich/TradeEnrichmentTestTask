@@ -29,6 +29,10 @@ data class TradeRecord(
         require(isValidDate(dateStr)) { "Invalid date format: $dateStr. Expected format: yyyyMMdd." }
     }
 
+    override fun toString(): String {
+        return "$dateStr, $productIdOrName, $currency, $price"
+    }
+
     companion object {
         private fun isValidDate(date: String): Boolean {
             return try {

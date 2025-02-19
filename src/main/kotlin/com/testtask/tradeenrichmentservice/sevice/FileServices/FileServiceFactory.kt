@@ -13,18 +13,13 @@ class FileServiceFactory(
 
     fun getFileService(fileType: String): FileService {
         logger.debug("Requesting file service for type: $fileType")
-        return try {
-            when (fileType.lowercase()) {
-                "csv" -> csvFileService
-                "xml" -> xmlFileService
-                "json" -> jsonFileService
-                else -> throw IllegalArgumentException("Unsupported file type: $fileType")
-            }.also {
-                logger.debug("Returned file service: ${it.javaClass.simpleName}")
-            }
-        } catch (e: Exception) {
-            logger.error("Error getting file service: ${e.message}", e)
-            throw e
+        return when (fileType.lowercase()) {
+            "csv" -> csvFileService
+            "xml" -> xmlFileService
+            "json" -> jsonFileService
+            else -> throw IllegalArgumentException("Unsupported file type: $fileType")
+        }.also {
+            logger.debug("Returned file service: ${it.javaClass.simpleName}")
         }
     }
 }
