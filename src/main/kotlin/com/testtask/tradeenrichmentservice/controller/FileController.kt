@@ -73,7 +73,7 @@ class FileController(private val tradeEnrichmentService: TradeEnrichmentService)
     suspend fun enrichTrades(@PathVariable extension: String, @RequestBody file: Flow<DataBuffer>): Flow<DataBuffer> =
         channelFlow {
             val accumulator = StringBuilder()
-            val bufferSize = 1024 * 1024 * 10 // 15MB
+            val bufferSize = 1024 * 1024 * 10
 
             try {
                 coroutineScope {

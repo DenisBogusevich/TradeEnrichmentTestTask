@@ -133,7 +133,7 @@ productId,productName
 ![img_3.png](img_3.png)
 
 ### ✅ Результати тестування
-![img.png](img.png)
+![img.png](img.jpg)
 
 ![img_1.png](img_1.png)
 
