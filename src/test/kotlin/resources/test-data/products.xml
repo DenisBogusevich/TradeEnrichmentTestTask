@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product>
+        <productId>1</productId>
+        <productName>Product A</productName>
+    </product>
+    <product>
+        <productId>2</productId>
+        <productName>Product B</productName>
+    </product>
+    <product>
+        <productId>3</productId>
+        <productName>Product C</productName>
+    </product>
+</products> 

@@ -1,0 +1,20 @@
+[
+    {
+        "date": "20240315",
+        "productId": "1",
+        "currency": "USD",
+        "price": "100.50"
+    },
+    {
+        "date": "20240315",
+        "productId": "2",
+        "currency": "EUR",
+        "price": "200.75"
+    },
+    {
+        "date": "20240315",
+        "productId": "3",
+        "currency": "JPY",
+        "price": "300.00"
+    }
+] 

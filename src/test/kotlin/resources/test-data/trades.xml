@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trades>
+    <trade>
+        <date>20240315</date>
+        <productId>1</productId>
+        <currency>USD</currency>
+        <price>100.50</price>
+    </trade>
+    <trade>
+        <date>20240315</date>
+        <productId>2</productId>
+        <currency>EUR</currency>
+        <price>200.75</price>
+    </trade>
+    <trade>
+        <date>20240315</date>
+        <productId>3</productId>
+        <currency>JPY</currency>
+        <price>300.00</price>
+    </trade>
+</trades> 
