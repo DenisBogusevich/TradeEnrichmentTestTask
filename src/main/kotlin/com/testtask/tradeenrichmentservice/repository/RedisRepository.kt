@@ -3,6 +3,9 @@
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
 import io.lettuce.core.api.coroutines.RedisCoroutinesCommands
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.withContext
 import org.springframework.data.redis.core.ReactiveRedisTemplate
@@ -22,7 +25,7 @@ class TradeRedisRepository(private val redisTemplate: StringRedisTemplate) {
     }
 
 
-    fun getTrades(keys: List<String>): List<Pair<String, String>> {
+    fun getTrades(keys: List<String>): Flow<Pair<String, String>> {
         val results = redisTemplate.executePipelined { connection ->
 
             keys.forEach { key ->
@@ -32,7 +35,10 @@ class TradeRedisRepository(private val redisTemplate: StringRedisTemplate) {
         }
 
 
-        return keys.zip(results.filterNotNull().map { it.toString() })
+        return  keys.zip(results.filterNotNull().map { it.toString() }).asFlow()
+
+
+
     }
 
 }

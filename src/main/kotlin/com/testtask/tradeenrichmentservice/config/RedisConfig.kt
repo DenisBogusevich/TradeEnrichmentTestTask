@@ -7,6 +7,8 @@ import io.lettuce.core.api.coroutines
 import io.lettuce.core.api.coroutines.RedisCoroutinesCommands
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.codec.ServerCodecConfigurer
+import org.springframework.web.reactive.config.WebFluxConfigurer
 
 @Configuration
 class RedisConfig {
@@ -27,3 +29,5 @@ class RedisConfig {
         return redisConnection.coroutines()
     }
 }
+
+
