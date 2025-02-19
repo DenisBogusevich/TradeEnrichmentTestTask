@@ -1,5 +1,6 @@
 ﻿package com.testtask.tradeenrichmentservice.sevice.FileServices
 
+import com.testtask.tradeenrichmentservice.model.TradeRecord
 import com.testtask.tradeenrichmentservice.repository.TradeRedisRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -12,12 +13,46 @@ import kotlin.math.min
 
 @Service
 class CsvFileService() : FileService {
+    override fun processProductFile(buffer: String): List<Pair<String, String>> {
 
-    override fun processFile(file: MultipartFile): List<String> {
-        return file.inputStream.bufferedReader().useLines { it.toList() }.drop(1)
+        return  buffer.lineSequence().mapNotNull { line ->
+            val parts = line.split(",")
+            if (parts.size == 2) {
+                try {
+                    Pair(parts[0], parts[1])
+                } catch (e: Exception) {
+                    null
+                }
+            } else {
+                null
+            }
+        }
+            .toList()
 
     }
 
+    override fun processTradeFile(buffer: String): List<TradeRecord> {
+
+        return  buffer.lineSequence().mapNotNull { line ->
+            val parts = line.split(",")
+            if (parts.size == 4) {
+                try {
+                    TradeRecord(
+                        dateStr = parts[0],
+                        productIdOrName = parts[1],
+                        currency = parts[2],
+                        price = parts[3]
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            } else {
+                null
+            }
+        }
+            .toList()
+
+    }
 
 
 }
