@@ -128,14 +128,14 @@ productId,productName
 
 ---
 ### Результаты виконання
-![image](![image](https://github.com/user-attachments/assets/317a6193-f160-491f-a802-283850c078f2)
-)
+
+https://ibb.co/23tRhJpx
 
 
-![img_3.png](img_3.png)
+https://ibb.co/BHWtj6z7
 
 ### ✅ Результати тестування
-![img.png](img.jpg)
+https://ibb.co/j9Mz9Rhm
 
-![img_1.png](img_1.png)
+https://ibb.co/jjTwVc1
 
