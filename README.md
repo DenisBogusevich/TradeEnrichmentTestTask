@@ -128,7 +128,7 @@ productId,productName
 
 ---
 ### Результаты виконання
-![img_2.png](![image](https://github.com/user-attachments/assets/cce66dfb-2313-420f-97b7-493fa23ff32d)
+![img_2.png]([![image](https://github.com/user-attachments/assets/cce66dfb-2313-420f-97b7-493fa23ff32d](https://ibb.co/23tRhJpx))
 )
 
 ![img_3.png](img_3.png)
